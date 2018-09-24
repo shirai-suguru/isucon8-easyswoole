@@ -54,7 +54,7 @@ abstract class BaseController extends Controller
         return $this->response();
     }
 
-    private function res_error(string $error = 'unknown', int $status = 500): Response
+    protected function res_error(string $error = 'unknown', int $status = 500): Response
     {
         $this->response()->withStatus($status)
             ->withHeader('Content-type', 'application/json');
@@ -273,7 +273,7 @@ abstract class BaseController extends Controller
         return $ret['cnt'];
     }
 
-    protected function render_report_csv(array $reports): Response
+    protected function render_report_csv(array $reports)
     {
         usort($reports, function ($a, $b) { return $a['sold_at'] > $b['sold_at']; });
 
@@ -288,11 +288,17 @@ abstract class BaseController extends Controller
             $body .= implode(',', $data);
             $body .= "\n";
         }
+        $tmpfname = tempnam("/tmp", "FOO");
+        $handle = fopen($tmpfname, "w");
+        fwrite($handle, $body);
 
         $this->response()->withHeader('Content-Type', 'text/csv; charset=UTF-8');
         $this->response()->withHeader('Content-Disposition', 'attachment; filename="report.csv"');
-        $this->response()->write($body);
+        $this->response()->sendFile($tmpfname);
+        // $this->response()->write($body);
         $this->response()->end();
-        return $this->response();
+        fclose($handle);
+
+        return true;
     }
 }

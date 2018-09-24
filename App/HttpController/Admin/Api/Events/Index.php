@@ -137,6 +137,7 @@ class Index extends \App\HttpController\BaseController
             array_push($reports, $report);
         }
     
-        return $this->render_report_csv($reports);
+        $this->render_report_csv($reports);
+        return;
     }
 }

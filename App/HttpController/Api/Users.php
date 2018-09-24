@@ -52,7 +52,8 @@ class Users extends \App\HttpController\BaseController
         }
     
         $user['recent_reservations'] = $recent_reservations;
-        $user['total_price'] = $this->select_one($db, 'SELECT IFNULL(SUM(e.price + s.price), 0) FROM reservations r INNER JOIN sheets s ON s.id = r.sheet_id INNER JOIN events e ON e.id = r.event_id WHERE r.user_id = ? AND r.canceled_at IS NULL', [$user['id']]);
+        $total_price = $this->select_one($db, 'SELECT IFNULL(SUM(e.price + s.price), 0) AS total_price FROM reservations r INNER JOIN sheets s ON s.id = r.sheet_id INNER JOIN events e ON e.id = r.event_id WHERE r.user_id = ? AND r.canceled_at IS NULL', [$user['id']]);
+        $user['total_price'] = $total_price['total_price'];
 
         $recent_events = [];
 

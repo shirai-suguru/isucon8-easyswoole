@@ -15,7 +15,8 @@ use \EasySwoole\Core\Http\Request;
 use \EasySwoole\Core\Http\Response;
 use duncan3dc\Laravel\BladeInstance;
 use EasySwoole\Config;
-
+use EasySwoole\Core\Component\SysConst;
+use EasySwoole\Core\Component\Di;
 
 Class EasySwooleEvent implements EventInterface {
 
@@ -25,7 +26,7 @@ Class EasySwooleEvent implements EventInterface {
     {
         // TODO: Implement frameInitialize() method.
         date_default_timezone_set('Asia/Tokyo');
-
+        Di::getInstance()->set(SysConst::HTTP_CONTROLLER_MAX_DEPTH, 5);
         // $tempPath   = Config::getInstance()->getConf('TEMP_DIR');    # 临时文件目录
         // $engine = new BladeInstance(EASYSWOOLE_ROOT . '/Views', "{$tempPath}/templates_c");
     }
